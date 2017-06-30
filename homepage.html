@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>聊天页面</title>
+		<link href="style.css" rel="stylesheet">
+		<script type="text/javascript" src="jquery.js"></script> 
+		<script type="text/javascript">
+			var me,xmlhttp0;
+			if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+				xmlhttp0=new XMLHttpRequest();
+			}
+			else{// code for IE6, IE5
+				xmlhttp0=new ActiveXObject("Microsoft.XMLHTTP");
+			}
+			
+			function show(){	
+				var div=document.getElementById("contact");
+				var text="message="+div.innerHTML;
+				xmlhttp0.onreadystatechange=function(){
+					if (xmlhttp0.readyState==4 && xmlhttp0.status==200){
+						text=xmlhttp0.responseText;
+						if(text!=""){
+							div.innerHTML+=text;
+							div.scrollTop=div.scrollHeight;
+						}
+					}
+				}
+				xmlhttp0.open("POST","record.php?action=show",true);
+				xmlhttp0.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+				xmlhttp0.send(text);
+			}
+			
+			function register (choose) {
+				document.getElementById("begin").style.display="none";
+				document.getElementById("main").style.display="inline";
+				switch(choose){
+					case 1:{
+						document.getElementById("img1").src="./Bob.jpg";
+						document.getElementById("name1").innerHTML="Bob";
+						document.getElementById("img2").src="./Alice.jpg";
+						document.getElementById("name2").innerHTML="Alice<br >(Me)";
+						me="Alice";
+						break;
+					}
+					case 2:{
+						document.getElementById("img1").src="./Alice.jpg";
+						document.getElementById("name1").innerHTML="Alice";
+						document.getElementById("img2").src="./Bob.jpg";
+						document.getElementById("name2").innerHTML="Bob<br >(Me)";
+						me="Bob";
+						break;
+					}
+				}
+				setInterval("show()",500);
+			}
+			
+			function emoticon () {
+				$("#emoticon").slideToggle();
+			}
+			
+			function choose (x) {
+				var div="emoticon"+x;
+				$("#emoticon").slideUp();
+				document.getElementById("editarea").value+=document.getElementById(div).innerHTML;
+			}
+			
+			function search () {
+				var xmlhttp;
+				var div=document.getElementById("history");
+				if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+					xmlhttp=new XMLHttpRequest();
+				}
+				else{// code for IE6, IE5
+					xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+				}
+				if(document.getElementById("history").style.display=="inline"){
+					document.getElementById("history").style.display="none";
+				}
+				else{
+					document.getElementById("history").style.display="inline";
+					xmlhttp.onreadystatechange=function(){
+						if (xmlhttp.readyState==4 && xmlhttp.status==200){
+							div.innerHTML=xmlhttp.responseText;
+							div.scrollTop=div.scrollHeight;
+						}
+					}
+					xmlhttp.open("GET","record.php?action=search",true);
+					xmlhttp.send();
+				}
+			}
+			
+			function send(){
+				var xmlhttp;
+				var text =document.getElementById("editarea").value,div=document.getElementById("contact");
+				if(text==""){
+					alert("发送消息不可为空！");
+				}
+				else{
+					if (window.XMLHttpRequest){// code for IE7+, Firefox, Chrome, Opera, Safari
+						xmlhttp=new XMLHttpRequest();
+					}
+					else{// code for IE6, IE5
+						xmlhttp=new ActiveXObject("Microsoft.XMLHTTP");
+					}
+					text="name="+me+"&message="+text;
+					document.getElementById("editarea").value="";
+					xmlhttp.open("POST","record.php?action=send",true);
+					xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+					xmlhttp.send(text);
+				}
+			}
+			
+			function exit () {
+				var text,ans,xmlhttp;
+				location.reload(true);
+			}
+		</script>
+	</head>
+	<body>
+		<img src="./bg.jpg" style="position:absolute;top:0;left:0;bottom:0;right:0;z-index:-1;width:100%;height:100%;" >
+		<!--begin register-->
+		<center>
+			<div id="begin">
+				<br ><br ><br ><br > 请单击图片登录：<br ><br ><br ><br >
+				<img src="./Alice.jpg" class="img0" onclick="register(1)">&emsp;&emsp;<img src="./Bob.jpg" class="img0" onclick="register(2)"><br><br >
+				Alice&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;Bob
+			</div>
+		</center>
+		<!--end register-->
+
+		<!--begin main-->	
+		<div id="main">
+		    <!--begin user1-->
+			<div id="friend1">
+				<img id="img1" class="img">
+				<div id="name1"></div>
+			</div>
+			<!--end user1-->
+			
+			<!--begin user2-->
+			<div id="friend2">
+				<img id="img2" class="img">
+				<div id="name2"></div>
+				<button id="button3" onclick="exit()">退出登录</button>
+			</div>
+			<!--end user2-->
+			
+			<!--begin contact-->
+			<div id="contact"></div>
+			<!--end contact-->
+			
+			<!--begin emoticon-->
+			<div id="emoticon">
+				<div id="emoticon1" class="emoticon" onclick="choose(1)">^O^</div>
+				<div id="emoticon2" class="emoticon" onclick="choose(2)">( ^_^ )</div>
+				<div id="emoticon3" class="emoticon" onclick="choose(3)">\(^o^)/</div>
+				<div id="emoticon4" class="emoticon" onclick="choose(4)">O(∩_∩)O</div>
+				<div id="emoticon5" class="emoticon" onclick="choose(5)"><(￣ˇ￣)/ </div>
+				<div id="emoticon6" class="emoticon" onclick="choose(6)">↖(^ω^)↗</div>
+				<div id="emoticon7" class="emoticon" onclick="choose(7)">o(￣▽￣)d</div>
+				<div id="emoticon8" class="emoticon" onclick="choose(8)">o(≧v≦)o~~</div>
+				<div id="emoticon9" class="emoticon" onclick="choose(9)">( ^_^ )/~~</div>
+				<div id="emoticon10" class="emoticon" onclick="choose(10)">=￣ω￣=</div>
+				<div id="emoticon11" class="emoticon" onclick="choose(11)">$_$</div>
+				<div id="emoticon12" class="emoticon" onclick="choose(12)">o(￣ε￣*)</div>
+				<div id="emoticon13" class="emoticon" onclick="choose(13)">(*@ο@*)</div>
+				<div id="emoticon14" class="emoticon" onclick="choose(14)">-_-|||</div>
+				<div id="emoticon15" class="emoticon" onclick="choose(15)">(ˉ▽￣～)</div>
+				<div id="emoticon16" class="emoticon" onclick="choose(16)">(￢_￢)</div>
+				<div id="emoticon17" class="emoticon" onclick="choose(17)">╮(╯_╰)╭</div>
+				<div id="emoticon18" class="emoticon" onclick="choose(18)">(＞﹏＜)</div>
+				<div id="emoticon19" class="emoticon" onclick="choose(19)">~~o(>_<)o ~~</div>
+				<div id="emoticon20" class="emoticon" onclick="choose(20)">(⊙▽⊙)</div>
+				<div id="emoticon21" class="emoticon" onclick="choose(21)">(⊙ω⊙)</div>
+				<div id="emoticon22" class="emoticon" onclick="choose(22)">(⊙o⊙)?</div>
+				<div id="emoticon23" class="emoticon" onclick="choose(23)">wow~ ⊙o⊙</div>
+				<div id="emoticon24" class="emoticon" onclick="choose(24)">(づ￣3￣)づ</div>
+			</div>
+			<!--end emoticon-->
+
+			<!--begin edit-->
+			<div id="edit">
+				<button id="button0" onclick="emoticon()">表情</button>
+				<button id="button1" onclick="search()">历史记录</button>
+				<textarea id="editarea" cols=55 rows=5></textarea>
+				<button id="button2" onclick="send()">发送</button>
+			</div>
+			<!--end edit-->	
+			
+			<!--begin history-->
+			<div id="history"></div>
+			<!--end history-->
+		</div>
+		<!--end main-->
+	</body>
+</html>
